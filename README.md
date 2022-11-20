@@ -1,9 +1,8 @@
 # Hello World? :wave: I'm Haris
 
 
-<img align="left" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" /> <br>
+<img align="left" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" />
 <img align="left" width="47%" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=compact" /> 
-<br>
 
 <!-- 
 # Achievements
