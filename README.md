@@ -15,7 +15,7 @@
  <a href="https://github.com/009MHz/github-readme-stats">
   <img align="right" width="43%" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=compact" />
 </a>
-<a href="https://github.com/anuraghazra/convoychat">
+<br> <a href="https://github.com/009MHz/github-readme-stats" >
   <img align = "right" width = "43%" src="https://github-readme-stats.vercel.app/api/wakatime?username=009MHz&layout=compact" />
 </a>
 
