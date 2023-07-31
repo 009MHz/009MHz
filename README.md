@@ -1,4 +1,4 @@
-# Hello World? :wave: I'm Haris<br>
+# Literally coding for living<br>
 
 [![website](./img/twitter-light.svg)](https://twitter.com/haris_satriyo#gh-light-mode-only)
 [![website](./img/twitter-dark.svg)](https://twitter.com/haris_satriyo#gh-dark-mode-only)
