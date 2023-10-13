@@ -14,17 +14,17 @@
 	<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2F009MHz1212%2Fhit-counter" alt="Hit Counter" />
 </div>
 
-<div align="left">
+<div align="center">
 	<img height="250em" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
 	<img height="250em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=donut-vertical" alt="Top Languages" />
 </div>
 
-<div align="left">
+<div align="center">
     <img width="100%" src="https://github-readme-stats.vercel.app/api/wakatime?username=009MHz&layout=compact" alt="WakaTime Stats" />
 </div>
 
  
 ## Achievements
-<div>
+<div align="center">
 	<img width="100%" align="center" src="https://streak-stats.demolab.com?user=009MHz&theme=elegant&hide_border=true&border_radius=5&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" href="https://git.io/streak-stats" />
  </div>
