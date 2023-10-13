@@ -10,11 +10,11 @@
 [![website](./img/instagram-dark.svg)](https://www.instagram.com/mhb.satriyo/#gh-dark-mode-only) <br>
 
 ## Current Stats
-<div align="center">
+<div align="left">
 	<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2F009MHz1212%2Fhit-counter" alt="Hit Counter" />
 </div>
 
-<div align="left">
+<div align="center">
 	<img height="255em" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
 	<img height="255em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=donut-vertical" alt="Top Languages" />
 </div>
