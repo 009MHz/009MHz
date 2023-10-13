@@ -1,4 +1,4 @@
-# Literally coding for living
+# Literally coding for learning and "Living"
 
 [![website](./img/twitter-light.svg)](https://twitter.com/haris_satriyo#gh-light-mode-only)
 [![website](./img/twitter-dark.svg)](https://twitter.com/haris_satriyo#gh-dark-mode-only)
@@ -14,9 +14,9 @@
 	<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2F009MHz1212%2Fhit-counter" alt="Hit Counter" />
 </div>
 
-<div align="center">
-	<img height="250em" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
-	<img height="250em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=donut-vertical" alt="Top Languages" />
+<div align="left">
+	<img height="309em" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
+	<img height="309em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=donut-vertical" alt="Top Languages" />
 </div>
 
 <div align="center">
