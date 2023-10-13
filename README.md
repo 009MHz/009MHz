@@ -26,5 +26,5 @@
  
 ## Achievements
 <div align="center">
-	<img width="100%" align="center" src="https://streak-stats.demolab.com?user=009MHz&theme=elegant&hide_border=true&border_radius=5&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" href="https://git.io/streak-stats" />
+	<img width="100%" align="center" src="https://streak-stats.demolab.com?user=009MHz&theme=transparent&hide_border=true&border_radius=5&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" href="https://git.io/streak-stats" />
  </div>
