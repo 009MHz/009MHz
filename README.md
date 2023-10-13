@@ -20,11 +20,11 @@
 </div>
 
 <div align="left">
-    <img width="81%" src="https://github-readme-stats.vercel.app/api/wakatime?username=009MHz&layout=compact" alt="WakaTime Stats" />
+    <img width="100%" src="https://github-readme-stats.vercel.app/api/wakatime?username=009MHz&layout=compact" alt="WakaTime Stats" />
 </div>
 
  
 ## Achievements
-<a 
-	href="https://git.io/streak-stats"><img width="81%" align="center" src="https://streak-stats.demolab.com?user=009MHz&theme=elegant&hide_border=true&border_radius=5&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" />
- </a>
+<div>
+	<img width="100%" align="center" src="https://streak-stats.demolab.com?user=009MHz&theme=elegant&hide_border=true&border_radius=5&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" href="https://git.io/streak-stats" />
+ </div>
