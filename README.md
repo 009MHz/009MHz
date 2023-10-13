@@ -15,8 +15,8 @@
 </div>
 
 <div align="left">
-	<img height="300em" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
-	<img height="300em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=donut-vertical" alt="Top Languages" />
+	<img height="275em" src="https://github-readme-stats.vercel.app/api?username=009MHz&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
+	<img height="275em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=009MHz&layout=donut-vertical" alt="Top Languages" />
 </div>
 
 <div align="center">
