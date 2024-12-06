@@ -23,7 +23,7 @@
 </div>
 
 <div align="center">
-    <img width="100%" src="https://github-readme-stats.vercel.app/api/wakatime?username=009MHz&layout=compact" alt="WakaTime Stats" />
+    <img width="100%" src="https://github-readme-stats.vercel.app/api/wakatime?username=009MHz&layout=compact&v=2" alt="WakaTime Stats" />
 </div>
 
  
