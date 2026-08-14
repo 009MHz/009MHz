@@ -15,7 +15,6 @@
 [![website](./img/instagram-light.svg)](https://www.instagram.com/mhb.satriyo/#gh-light-mode-only)
 [![website](./img/instagram-dark.svg)](https://www.instagram.com/mhb.satriyo/#gh-dark-mode-only) <br>
 
----
 
 ## Technology Stack
 
@@ -37,37 +36,12 @@
 
 </div>
 
----
+
 
 ## GitHub Activity
 
-<div align="center">
+![GitHub Activity](./profile/activity.svg)
 
-<img
-  width="48%"
-  src="./profile/stats.svg"
-  alt="GitHub Statistics"
->
-&nbsp;
-<img
-  width="48%"
-  src="./profile/top-languages.svg"
-  alt="Top Languages"
->
-
-</div>
-
-<br>
-
-<div align="center">
-
-<img
-  width="96%"
-  src="./profile/streak.svg"
-  alt="Contribution Streak"
->
-
-</div>
 
 ## Currently Building
 
@@ -105,7 +79,7 @@ Building confidence across the software lifecycle through:
 </tr>
 </table>
 
----
+
 
 ## Automation Approach
 
@@ -131,7 +105,7 @@ Building confidence across the software lifecycle through:
 
 </div>
 
----
+
 
 ## What I'm Exploring
 
@@ -145,7 +119,7 @@ Playwright Architecture
         └── Test reliability & flakiness reduction
 ```
 
----
+
 
 <details>
 <summary><strong>More About My Engineering Focus</strong></summary>
