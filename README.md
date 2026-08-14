@@ -18,9 +18,9 @@
 ### Automation
 
 <img src="https://img.shields.io/badge/Playwright-2D2D2D?style=for-the-badge&logo=playwright&logoColor=45BA4B" alt="Playwright">
-<img src="https://img.shields.io/badge/TypeScript-2D2D2D?style=for-the-badge&logo=typescript&logoColor=3178C6" alt="TypeScript">
-<img src="https://img.shields.io/badge/Python-2D2D2D?style=for-the-badge&logo=python&logoColor=3776AB" alt="Python">
 <img src="https://img.shields.io/badge/Selenium-2D2D2D?style=for-the-badge&logo=selenium&logoColor=43B02A" alt="Selenium">
+<img src="https://img.shields.io/badge/Python-2D2D2D?style=for-the-badge&logo=python&logoColor=3776AB" alt="Python">
+<img src="https://img.shields.io/badge/TypeScript-2D2D2D?style=for-the-badge&logo=typescript&logoColor=3178C6" alt="TypeScript">
 
 ### API · CI/CD · Reporting
 
@@ -73,45 +73,6 @@ Building confidence across the software lifecycle through:
 </tr>
 </table>
 
-## Automation Approach
-
-<div align="center">
-
-**Reliable**
-
-↓
-
-**Maintainable**
-
-↓
-
-**Meaningful Coverage**
-
-↓
-
-**Fast Feedback**
-
-↓
-
-**Continuous Improvement**
-
-</div>
-
-
-
-## What I'm Exploring
-
-```text
-Playwright Architecture
-        │
-        ├── Scalable test design
-        ├── API automation
-        ├── Authentication & session strategies
-        ├── CI/CD orchestration
-        └── Test reliability & flakiness reduction
-```
-
-
 
 <details>
 <summary><strong>More About My Engineering Focus</strong></summary>
@@ -137,8 +98,7 @@ My current technical direction is centered around **Playwright + Python**, while
 </a>
 
 <br>
-<br>
 
-<sub>Quality is not a final checkpoint. It is part of how great feature is built.</sub>
+<sub>Quality is not a final checkpoint. It is part of how a great feature is shipped.</sub>
 
 </div>
