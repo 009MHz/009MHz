@@ -40,41 +40,38 @@
 
 ## Currently Building
 
-<table>
+<table width="100%">
 <tr>
-<td width="50%" valign="top">
-
-### Test Automation
+<th width="50%" align="left">Test Automation</th>
+<th width="50%" align="left">Quality Engineering</th>
+</tr>
+<tr>
+<td valign="top">
 
 Designing maintainable automation frameworks with:
 
-* Playwright
-* Python
-* TypeScript
-* Page Object Model
-* Custom fixtures
-* Authentication & session management
-* Cross-browser execution
+- Playwright
+- Python
+- TypeScript
+- Page Object Model
+- Authentication & session management
+- Cross-browser execution
 
 </td>
-<td width="50%" valign="top">
-
-### Quality Engineering
+<td valign="top">
 
 Building confidence across the software lifecycle through:
 
-* E2E testing
-* API testing
-* Smoke & regression testing
-* CI/CD automation
-* Allure reporting
-* Test reliability & maintainability
+- E2E testing
+- API testing
+- Smoke & regression testing
+- CI/CD automation
+- Allure reporting
+- Test reliability & maintainability
 
 </td>
 </tr>
 </table>
-
-
 
 ## Automation Approach
 
