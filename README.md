@@ -40,10 +40,10 @@
 
 ## Currently Building
 
-<table width="100%">
+<table style="width: 100%; table-layout: fixed;">
 <tr>
-<th width="50%" align="center">Test Automation</th>
-<th width="50%" align="center">Quality Engineering</th>
+<th style="width: 50%; text-align: left;">Test Automation</th>
+<th style="width: 50%; text-align: left;">Quality Engineering</th>
 </tr>
 <tr>
 <td valign="top">
