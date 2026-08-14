@@ -2,7 +2,6 @@ name: Update Profile Statistics
 
 on:
   schedule:
-    # Run once per day at 00:15 UTC.
     - cron: "15 0 * * *"
   workflow_dispatch:
 
@@ -33,8 +32,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_USERNAME: 009MHz
-          # Only repositories listed here are used for Top Languages.
-          FEATURED_REPOSITORIES: playwright-demo, selenium_demo
         run: python scripts/generate_profile_stats.py
 
       - name: Verify generated dashboard
@@ -43,10 +40,11 @@ jobs:
           test -s profile/activity.svg
           grep -q '<svg ' profile/activity.svg
           grep -q '</svg>' profile/activity.svg
-          grep -qi 'GitHub Activity' profile/activity.svg
-          echo "profile/activity.svg is valid."
+          grep -q 'Technology Focus' profile/activity.svg
+          grep -q 'Contribution Streak' profile/activity.svg
+          echo "Profile dashboard validated."
 
-      - name: Remove legacy statistics
+      - name: Remove legacy generated files
         run: |
           git rm -f profile/stats.svg profile/top-languages.svg profile/streak.svg 2>/dev/null || true
 
@@ -56,7 +54,7 @@ jobs:
       - name: Commit updated dashboard
         run: |
           if git diff --cached --quiet; then
-            echo "Profile statistics are already up to date."
+            echo "Profile dashboard is already up to date."
             exit 0
           fi
 
