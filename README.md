@@ -42,11 +42,9 @@
 
 <table width="100%">
 <tr>
-<th width="50%" align="left">Test Automation</th>
-<th width="50%" align="left">Quality Engineering</th>
-</tr>
-<tr>
-<td valign="top">
+<td width="50%" valign="top">
+
+### Test Automation
 
 Designing maintainable automation frameworks with:
 
@@ -58,7 +56,9 @@ Designing maintainable automation frameworks with:
 - Cross-browser execution
 
 </td>
-<td valign="top">
+<td width="50%" valign="top">
+
+### Quality Engineering
 
 Building confidence across the software lifecycle through:
 
