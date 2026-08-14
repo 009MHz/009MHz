@@ -34,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_USERNAME: 009MHz
           # Only repositories listed here are used for Top Languages.
-          FEATURED_REPOSITORIES: sportstream,playwright-demo
+          FEATURED_REPOSITORIES: playwright-demo, selenium_demo
         run: python scripts/generate_profile_stats.py
 
       - name: Verify generated dashboard
