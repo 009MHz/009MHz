@@ -4,15 +4,11 @@
 
 **Building reliable software through automation, thoughtful testing, and continuous feedback.**
 
-
-[![website](./img/twitter-light.svg)](https://twitter.com/haris_satriyo#gh-light-mode-only)
+<!-- [![website](./img/twitter-light.svg)](https://twitter.com/haris_satriyo)
+[![website](./img/instagram-light.svg)](https://www.instagram.com/mhb.satriyo) -->
+[![website](./img/instagram-dark.svg)](https://www.instagram.com/mhb.satriyo) 
+&nbsp;&nbsp;
 [![website](./img/twitter-dark.svg)](https://twitter.com/haris_satriyo)
-&nbsp;&nbsp;
-[![website](./img/linkedin-light.svg)](https://www.linkedin.com/in/haris-satriyo)
-[![website](./img/linkedin-dark.svg)](https://www.linkedin.com/in/haris-satriyo)
-&nbsp;&nbsp;
-[![website](./img/instagram-light.svg)](https://www.instagram.com/mhb.satriyo)
-[![website](./img/instagram-dark.svg)](https://www.instagram.com/mhb.satriyo) <br>
 
 
 ## Technology Stack
