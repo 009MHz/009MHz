@@ -48,7 +48,7 @@ FEATURED_REPOSITORIES = [
 ]
 
 WIDTH = 1000
-HEIGHT = 430
+HEIGHT = 380
 
 BG = "#0d1117"
 CARD = "#161b22"
@@ -288,7 +288,7 @@ def generate_activity_svg(
     ]
 
     # Top cards
-    card_y = 58
+    card_y = 24
     card_h = 170
     gap = 18
     card_w = (WIDTH - 56 - gap) / 2
@@ -376,7 +376,7 @@ def generate_activity_svg(
         )
 
     # Streak card
-    streak_y = 246
+    streak_y = 212
     streak_h = 150
 
     parts.extend(
