@@ -31,7 +31,6 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-
 API_URL = "https://api.github.com"
 GRAPHQL_URL = f"{API_URL}/graphql"
 API_VERSION = "2026-03-10"
@@ -42,9 +41,9 @@ OUTPUT = ROOT / "profile" / "activity.svg"
 USERNAME = os.getenv("GITHUB_USERNAME", "009MHz")
 FEATURED_REPOSITORIES = [
     repo.strip()
-    for repo in os.getenv(
-        "FEATURED_REPOSITORIES", "sportstream,playwright-demo"
-    ).split(",")
+    for repo in os.getenv("FEATURED_REPOSITORIES", "sportstream,playwright-demo").split(
+        ","
+    )
     if repo.strip()
 ]
 
@@ -175,11 +174,7 @@ def get_profile_data(username: str, token: str) -> dict[str, Any]:
         raise GitHubAPIError(f"GitHub user '{username}' was not found.")
 
     calendar = user["contributionsCollection"]["contributionCalendar"]
-    days = [
-        day
-        for week in calendar["weeks"]
-        for day in week["contributionDays"]
-    ]
+    days = [day for week in calendar["weeks"] for day in week["contributionDays"]]
 
     return {
         "login": user["login"],
@@ -204,9 +199,7 @@ def get_languages(
         languages = github_request(url, token=token)
 
         if not isinstance(languages, dict):
-            raise GitHubAPIError(
-                f"Unexpected language response for {full_name}."
-            )
+            raise GitHubAPIError(f"Unexpected language response for {full_name}.")
 
         for language, byte_count in languages.items():
             if isinstance(byte_count, int):
@@ -217,9 +210,7 @@ def get_languages(
 
 def calculate_streak(days: list[dict[str, Any]]) -> tuple[int, int]:
     counts = {
-        datetime.strptime(day["date"], "%Y-%m-%d").date(): int(
-            day["contributionCount"]
-        )
+        datetime.strptime(day["date"], "%Y-%m-%d").date(): int(day["contributionCount"])
         for day in days
     }
 
@@ -271,7 +262,7 @@ def svg_text(
         f'<text x="{x}" y="{y}" fill="{fill}" '
         f'font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" '
         f'font-size="{size}px" font-weight="{weight}" text-anchor="{anchor}">'
-        f'{esc(value)}</text>'
+        f"{esc(value)}</text>"
     )
 
 
@@ -291,18 +282,9 @@ def generate_activity_svg(
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" '
         f'width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" '
-        f'role="img" aria-label="GitHub Activity for @{esc(profile["login"])}">',
+        f'role="img" aria-label="GitHub activity statistics for @{esc(profile["login"])}">',
         f'<rect width="{WIDTH}" height="{HEIGHT}" rx="14" fill="{BG}" '
         f'stroke="{BORDER}"/>',
-        svg_text(28, 38, "GitHub Activity", size=18, weight=600),
-        svg_text(
-            WIDTH - 28,
-            38,
-            f"@{profile['login']}",
-            size=12,
-            fill=MUTED,
-            anchor="end",
-        ),
     ]
 
     # Top cards
@@ -313,12 +295,16 @@ def generate_activity_svg(
     left_x = 28
     right_x = left_x + card_w + gap
 
-    parts.extend([
-        rounded_card(left_x, card_y, card_w, card_h),
-        rounded_card(right_x, card_y, card_w, card_h),
-        svg_text(left_x + 22, card_y + 32, "GitHub Statistics", size=15, weight=600),
-        svg_text(right_x + 22, card_y + 32, "Top Languages", size=15, weight=600),
-    ])
+    parts.extend(
+        [
+            rounded_card(left_x, card_y, card_w, card_h),
+            rounded_card(right_x, card_y, card_w, card_h),
+            svg_text(
+                left_x + 22, card_y + 32, "GitHub Statistics", size=15, weight=600
+            ),
+            svg_text(right_x + 22, card_y + 32, "Top Languages", size=15, weight=600),
+        ]
+    )
 
     stats = [
         ("Contributions", profile["contributions"], BLUE),
@@ -393,22 +379,24 @@ def generate_activity_svg(
     streak_y = 246
     streak_h = 150
 
-    parts.extend([
-        rounded_card(28, streak_y, WIDTH - 56, streak_h),
-        svg_text(50, streak_y + 32, "Contribution Streak", size=15, weight=600),
-        svg_text(
-            WIDTH - 50,
-            streak_y + 32,
-            "Based on the GitHub contribution calendar",
-            size=11,
-            fill=MUTED,
-            anchor="end",
-        ),
-        svg_text(50, streak_y + 74, "Current", size=11, fill=MUTED),
-        svg_text(50, streak_y + 108, f"{current} days", size=24, weight=700),
-        svg_text(500, streak_y + 74, "Longest", size=11, fill=MUTED),
-        svg_text(500, streak_y + 108, f"{longest} days", size=24, weight=700),
-    ])
+    parts.extend(
+        [
+            rounded_card(28, streak_y, WIDTH - 56, streak_h),
+            svg_text(50, streak_y + 32, "Contribution Streak", size=15, weight=600),
+            svg_text(
+                WIDTH - 50,
+                streak_y + 32,
+                "Based on the GitHub contribution calendar",
+                size=11,
+                fill=MUTED,
+                anchor="end",
+            ),
+            svg_text(50, streak_y + 74, "Current", size=11, fill=MUTED),
+            svg_text(50, streak_y + 108, f"{current} days", size=24, weight=700),
+            svg_text(500, streak_y + 74, "Longest", size=11, fill=MUTED),
+            svg_text(500, streak_y + 108, f"{longest} days", size=24, weight=700),
+        ]
+    )
 
     if FEATURED_REPOSITORIES:
         featured = ", ".join(FEATURED_REPOSITORIES)
