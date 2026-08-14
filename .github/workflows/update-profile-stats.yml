@@ -35,9 +35,24 @@ jobs:
           GITHUB_USERNAME: 009MHz
         run: python scripts/generate_profile_stats.py
 
+      - name: Verify generated statistics
+        run: |
+          echo "Generated profile files:"
+          find profile -maxdepth 1 -type f -print
+
+          test -f profile/stats.svg
+          test -f profile/top-languages.svg
+          test -f profile/streak.svg
+
+          echo "All required statistics files exist."
+
+      - name: Stage updated statistics
+        run: |
+          git add profile/
+
       - name: Commit updated statistics
         run: |
-          if git diff --quiet -- profile; then
+          if git diff --cached --quiet; then
             echo "Profile statistics are already up to date."
             exit 0
           fi
@@ -45,6 +60,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add profile/
           git commit -m "chore: update profile statistics"
           git push
