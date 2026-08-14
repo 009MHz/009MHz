@@ -21,8 +21,6 @@ def sample_profile() -> dict:
     return {
         "login": "009MHz",
         "repositories": 6,
-        "followers": 2,
-        "stars_received": 3,
         "contributions": 275,
         "days": [
             {"date": (today - timedelta(days=2)).isoformat(), "contributionCount": 1},
@@ -63,9 +61,8 @@ def test_statistics_are_present() -> None:
 
     assert ">275</text>" in svg
     assert ">6</text>" in svg
-    assert ">2</text>" in svg
-    assert ">3</text>" in svg
-    assert "Stars received" in svg
+    assert "Followers" not in svg
+    assert "Stars received" not in svg
 
 
 def test_streak_calculation() -> None:

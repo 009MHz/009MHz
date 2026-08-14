@@ -54,8 +54,6 @@ TEXT = "#f0f6fc"
 MUTED = "#8b949e"
 BLUE = "#58a6ff"
 GREEN = "#3fb950"
-PURPLE = "#a371f7"
-ORANGE = "#d29922"
 
 
 class GitHubAPIError(RuntimeError):
@@ -126,9 +124,6 @@ def get_profile_data(username: str, token: str) -> dict[str, Any]:
     query Profile($login: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $login) {
         login
-        followers {
-          totalCount
-        }
         repositories(
           first: 100
           ownerAffiliations: OWNER
@@ -177,16 +172,9 @@ def get_profile_data(username: str, token: str) -> dict[str, Any]:
     ]
 
     repositories = user["repositories"]
-    stars_received = sum(
-        int(node.get("stargazerCount", 0))
-        for node in repositories.get("nodes", [])
-    )
-
     return {
         "login": user["login"],
-        "followers": user["followers"]["totalCount"],
         "repositories": repositories["totalCount"],
-        "stars_received": stars_received,
         "contributions": calendar["totalContributions"],
         "days": days,
     }
@@ -271,7 +259,7 @@ def generate_activity_svg(profile: dict[str, Any]) -> str:
     # Profile statistics card
     stats_x = 0
     stats_y = 8
-    card_h = 150
+    card_h = 132
     gap = 18
     card_w = (WIDTH - gap) / 2
     right_x = card_w + gap
@@ -286,39 +274,35 @@ def generate_activity_svg(profile: dict[str, Any]) -> str:
     stats = [
         ("Contributions", profile["contributions"], BLUE),
         ("Repositories", profile["repositories"], GREEN),
-        ("Followers", profile["followers"], PURPLE),
-        ("Stars received", profile["stars_received"], ORANGE),
     ]
 
     positions = [
-        (24, stats_y + 70),
-        (238, stats_y + 70),
-        (24, stats_y + 128),
-        (238, stats_y + 128),
+        (24, stats_y + 78),
+        (238, stats_y + 78),
     ]
 
     for (label, value, accent), (x, y) in zip(stats, positions):
         parts.append(f'<circle cx="{x + 4}" cy="{y - 5}" r="4" fill="{accent}"/>')
         parts.append(svg_text(x + 16, y, label, size=11, fill=MUTED))
-        parts.append(svg_text(x, y + 27, f"{value:,}", size=21, weight=700))
+        parts.append(svg_text(x, y + 32, f"{value:,}", size=25, weight=700))
 
     # Technology focus card.
     focus_x = right_x + 24
-    focus_y = stats_y + 62
+    focus_y = stats_y + 54
     columns = 2
 
     for index, (name, accent) in enumerate(TECHNOLOGY_FOCUS):
         column = index % columns
         row = index // columns
         x = focus_x + column * 225
-        y = focus_y + row * 28
+        y = focus_y + row * 25
 
         parts.append(f'<circle cx="{x + 4}" cy="{y - 4}" r="4" fill="{accent}"/>')
         parts.append(svg_text(x + 16, y, name, size=11))
 
     # Contribution streak card.
-    streak_y = 174
-    streak_h = 150
+    streak_y = 156
+    streak_h = 144
 
     parts.extend([
         rounded_card(0, streak_y, WIDTH, streak_h),
