@@ -1,18 +1,15 @@
 # Profile Statistics Configuration
 
-The workflow uses these defaults:
+The dashboard intentionally does not enumerate or analyze repository languages.
 
-```text
-GITHUB_USERNAME=009MHz
-FEATURED_REPOSITORIES=playwright-demo
-```
+It uses:
+- GitHub contribution calendar
+- Public repository count
+- Followers
+- Stars received by public, non-fork repositories
+- Manually curated technology focus
 
-To change which repositories influence the Top Languages panel, edit
-`FEATURED_REPOSITORIES` in:
+Edit `TECHNOLOGY_FOCUS` in `scripts/generate_profile_stats.py` when the public
+technology stack should change.
 
-```text
-.github/workflows/update-profile-stats.yml
-```
-
-The contribution statistics still use the GitHub contribution calendar for the
-profile as a whole.
+The generator does not reference company/private repository names.
