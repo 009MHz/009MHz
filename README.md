@@ -73,45 +73,6 @@ Building confidence across the software lifecycle through:
 </tr>
 </table>
 
-## Automation Approach
-
-<div align="center">
-
-**Reliable**
-
-↓
-
-**Maintainable**
-
-↓
-
-**Meaningful Coverage**
-
-↓
-
-**Fast Feedback**
-
-↓
-
-**Continuous Improvement**
-
-</div>
-
-
-
-## What I'm Exploring
-
-```text
-Playwright Architecture
-        │
-        ├── Scalable test design
-        ├── API automation
-        ├── Authentication & session strategies
-        ├── CI/CD orchestration
-        └── Test reliability & flakiness reduction
-```
-
-
 
 <details>
 <summary><strong>More About My Engineering Focus</strong></summary>
@@ -137,8 +98,7 @@ My current technical direction is centered around **Playwright + Python**, while
 </a>
 
 <br>
-<br>
 
-<sub>Quality is not a final checkpoint. It is part of how great feature is built.</sub>
+<sub>Quality is not a final checkpoint. It is part of how a great feature is shipped.</sub>
 
 </div>
