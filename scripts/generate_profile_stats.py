@@ -283,8 +283,6 @@ def generate_activity_svg(
         f'<svg xmlns="http://www.w3.org/2000/svg" '
         f'width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" '
         f'role="img" aria-label="GitHub activity statistics for @{esc(profile["login"])}">',
-        f'<rect width="{WIDTH}" height="{HEIGHT}" rx="14" fill="{BG}" '
-        f'stroke="{BORDER}"/>',
     ]
 
     # Top cards
