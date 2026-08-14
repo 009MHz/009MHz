@@ -44,26 +44,6 @@
 <div align="center">
 
 <a href="https://github.com/009MHz">
-  <img height="180" src="https://github-stats-extended.vercel.app/api?username=009MHz&show_icons=true&hide_border=true&theme=transparent&rank_icon=github" alt="009MHz GitHub Statistics">
-</a>
-&nbsp;
-<a href="https://github.com/009MHz">
-  <img height="180" src="https://github-stats-extended.vercel.app/api/top-langs/?username=009MHz&layout=compact&hide_border=true&theme=transparent&langs_count=6" alt="009MHz Top Languages">
-</a>
-
-</div>
-
-<div align="center">
-
-<a href="https://github.com/009MHz">
-  <img width="70%" src="https://streak-stats.demolab.com?user=009MHz&theme=transparent&hide_border=true&border_radius=8&date_format=M%20j%5B%2C%20Y%5D" alt="009MHz GitHub Contribution Streak">
-</a>
-
-</div>
-
-<div align="center">
-
-<a href="https://github.com/009MHz">
   <img height="180" src="./profile/stats.svg" alt="GitHub Statistics">
 </a>
 &nbsp;
@@ -94,6 +74,7 @@
 Designing maintainable automation frameworks with:
 
 * Playwright
+* Python
 * TypeScript
 * Page Object Model
 * Custom fixtures
