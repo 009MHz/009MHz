@@ -43,25 +43,31 @@
 
 <div align="center">
 
-<a href="https://github.com/009MHz">
-  <img height="180" src="./profile/stats.svg" alt="GitHub Statistics">
-</a>
+<img
+  width="48%"
+  src="./profile/stats.svg"
+  alt="GitHub Statistics"
+>
 &nbsp;
-<a href="https://github.com/009MHz">
-  <img height="180" src="./profile/top-languages.svg" alt="Top Languages">
-</a>
+<img
+  width="48%"
+  src="./profile/top-languages.svg"
+  alt="Top Languages"
+>
 
 </div>
+
+<br>
 
 <div align="center">
 
-<a href="https://github.com/009MHz">
-  <img width="70%" src="./profile/streak.svg" alt="Contribution Streak">
-</a>
+<img
+  width="96%"
+  src="./profile/streak.svg"
+  alt="Contribution Streak"
+>
 
 </div>
-
----
 
 ## Currently Building
 
