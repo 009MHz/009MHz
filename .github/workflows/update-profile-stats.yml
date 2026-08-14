@@ -29,28 +29,31 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Generate SVG statistics
+      - name: Generate activity dashboard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_USERNAME: 009MHz
+          # Only repositories listed here are used for Top Languages.
+          FEATURED_REPOSITORIES: sportstream,playwright-demo
         run: python scripts/generate_profile_stats.py
 
-      - name: Verify generated statistics
+      - name: Verify generated dashboard
         run: |
-          echo "Generated profile files:"
-          find profile -maxdepth 1 -type f -print
+          test -f profile/activity.svg
+          test -s profile/activity.svg
+          grep -q '<svg ' profile/activity.svg
+          grep -q '</svg>' profile/activity.svg
+          grep -qi 'GitHub Activity' profile/activity.svg
+          echo "profile/activity.svg is valid."
 
-          test -f profile/stats.svg
-          test -f profile/top-languages.svg
-          test -f profile/streak.svg
-
-          echo "All required statistics files exist."
-
-      - name: Stage updated statistics
+      - name: Remove legacy statistics
         run: |
-          git add profile/
+          git rm -f profile/stats.svg profile/top-languages.svg profile/streak.svg 2>/dev/null || true
 
-      - name: Commit updated statistics
+      - name: Stage generated dashboard
+        run: git add profile/activity.svg
+
+      - name: Commit updated dashboard
         run: |
           if git diff --cached --quiet; then
             echo "Profile statistics are already up to date."

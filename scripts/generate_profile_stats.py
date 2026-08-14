@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """
-Generate self-hosted GitHub profile statistics as SVG files.
-
-No third-party Python packages are required.
+Generate a self-hosted GitHub activity dashboard as a single SVG.
 
 Outputs:
-  profile/stats.svg
-  profile/top-languages.svg
-  profile/streak.svg
+    profile/activity.svg
 
-The script intentionally writes files only after all API requests succeed.
-That prevents a temporary GitHub API failure from replacing valid existing
-statistics with incomplete data.
+Data sources:
+    - GitHub GraphQL API for profile metadata and contribution calendar.
+    - GitHub REST API for languages in selected featured repositories.
+
+Environment variables:
+    GITHUB_TOKEN              Required GitHub Actions token.
+    GITHUB_USERNAME           Defaults to 009MHz.
+    FEATURED_REPOSITORIES     Comma-separated repository names owned by the
+                              profile. Defaults to sportstream,playwright-demo.
+
+The generator writes the output only after all required API calls succeed.
 """
 
 from __future__ import annotations
@@ -21,7 +25,7 @@ import json
 import os
 import sys
 from collections import Counter
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -33,20 +37,31 @@ GRAPHQL_URL = f"{API_URL}/graphql"
 API_VERSION = "2026-03-10"
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = ROOT / "profile"
+OUTPUT = ROOT / "profile" / "activity.svg"
+
+USERNAME = os.getenv("GITHUB_USERNAME", "009MHz")
+FEATURED_REPOSITORIES = [
+    repo.strip()
+    for repo in os.getenv(
+        "FEATURED_REPOSITORIES", "sportstream,playwright-demo"
+    ).split(",")
+    if repo.strip()
+]
+
+WIDTH = 1000
+HEIGHT = 430
 
 BG = "#0d1117"
 CARD = "#161b22"
 BORDER = "#30363d"
 TEXT = "#f0f6fc"
 MUTED = "#8b949e"
-ACCENT = "#58a6ff"
+BLUE = "#58a6ff"
 GREEN = "#3fb950"
 PURPLE = "#a371f7"
 ORANGE = "#d29922"
-
-WIDTH = 495
-HEIGHT = 180
+PINK = "#f778ba"
+TRACK = "#21262d"
 
 
 class GitHubAPIError(RuntimeError):
@@ -60,7 +75,6 @@ def github_request(
     method: str = "GET",
     payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Make an authenticated GitHub API request and return decoded JSON."""
     headers = {
         "Accept": "application/vnd.github+json",
         "Authorization": f"Bearer {token}",
@@ -93,7 +107,6 @@ def github_request(
 
 
 def graphql(token: str, query: str, variables: dict[str, Any]) -> dict[str, Any]:
-    """Execute a GitHub GraphQL query."""
     result = github_request(
         GRAPHQL_URL,
         token=token,
@@ -112,14 +125,12 @@ def graphql(token: str, query: str, variables: dict[str, Any]) -> dict[str, Any]
 
 
 def get_profile_data(username: str, token: str) -> dict[str, Any]:
-    """Fetch profile metadata and a one-year contribution calendar."""
     today = date.today()
     start = today - timedelta(days=365)
 
     query = """
     query Profile($login: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $login) {
-        name
         login
         followers {
           totalCount
@@ -164,65 +175,31 @@ def get_profile_data(username: str, token: str) -> dict[str, Any]:
         raise GitHubAPIError(f"GitHub user '{username}' was not found.")
 
     calendar = user["contributionsCollection"]["contributionCalendar"]
-
-    contribution_days = [
+    days = [
         day
         for week in calendar["weeks"]
         for day in week["contributionDays"]
     ]
 
     return {
-        "name": user.get("name") or username,
         "login": user["login"],
         "followers": user["followers"]["totalCount"],
         "repositories": user["repositories"]["totalCount"],
         "stars": user["starredRepositories"]["totalCount"],
         "contributions": calendar["totalContributions"],
-        "days": contribution_days,
+        "days": days,
     }
-
-
-def get_public_repositories(username: str, token: str) -> list[dict[str, Any]]:
-    """Fetch all public, non-fork repositories owned by the profile."""
-    repositories: list[dict[str, Any]] = []
-    page = 1
-
-    while True:
-        url = (
-            f"{API_URL}/users/{username}/repos"
-            f"?per_page=100&page={page}&type=owner&sort=updated"
-        )
-        batch = github_request(url, token=token)
-
-        if not isinstance(batch, list):
-            raise GitHubAPIError("Unexpected repository API response.")
-
-        repositories.extend(
-            repo for repo in batch
-            if not repo.get("fork", False) and not repo.get("archived", False)
-        )
-
-        if len(batch) < 100:
-            break
-
-        page += 1
-
-    return repositories
 
 
 def get_languages(
     username: str,
-    repositories: list[dict[str, Any]],
+    repositories: list[str],
     token: str,
 ) -> Counter[str]:
-    """Aggregate language byte counts across public non-fork repositories."""
     totals: Counter[str] = Counter()
 
     for repository in repositories:
-        full_name = repository.get("full_name")
-        if not full_name:
-            continue
-
+        full_name = f"{username}/{repository}"
         url = f"{API_URL}/repos/{full_name}/languages"
         languages = github_request(url, token=token)
 
@@ -239,12 +216,6 @@ def get_languages(
 
 
 def calculate_streak(days: list[dict[str, Any]]) -> tuple[int, int]:
-    """
-    Calculate current and longest contribution streaks.
-
-    A current streak may include today. If today has no contribution,
-    yesterday is used as the first day of the current streak.
-    """
     counts = {
         datetime.strptime(day["date"], "%Y-%m-%d").date(): int(
             day["contributionCount"]
@@ -255,12 +226,11 @@ def calculate_streak(days: list[dict[str, Any]]) -> tuple[int, int]:
     if not counts:
         return 0, 0
 
-    all_dates = sorted(counts)
     longest = 0
     run = 0
     previous: date | None = None
 
-    for current in all_dates:
+    for current in sorted(counts):
         if counts[current] > 0:
             if previous is not None and current == previous + timedelta(days=1):
                 run += 1
@@ -273,14 +243,9 @@ def calculate_streak(days: list[dict[str, Any]]) -> tuple[int, int]:
             previous = None
 
     today = date.today()
-
-    if counts.get(today, 0) > 0:
-        cursor = today
-    else:
-        cursor = today - timedelta(days=1)
+    cursor = today if counts.get(today, 0) > 0 else today - timedelta(days=1)
 
     current = 0
-
     while counts.get(cursor, 0) > 0:
         current += 1
         cursor -= timedelta(days=1)
@@ -289,27 +254,10 @@ def calculate_streak(days: list[dict[str, Any]]) -> tuple[int, int]:
 
 
 def esc(value: Any) -> str:
-    """Escape text for safe SVG/XML output."""
     return html.escape(str(value), quote=True)
 
 
-def svg_open(width: int, height: int, label: str) -> str:
-    return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" '
-        f'width="{width}" height="{height}" '
-        f'viewBox="0 0 {width} {height}" role="img" '
-        f'aria-label="{esc(label)}">'
-    )
-
-
-def card_background(width: int, height: int) -> str:
-    return (
-        f'<rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" '
-        f'rx="12" fill="{BG}" stroke="{BORDER}"/>'
-    )
-
-
-def text(
+def svg_text(
     x: float,
     y: float,
     value: str,
@@ -320,115 +268,157 @@ def text(
     anchor: str = "start",
 ) -> str:
     return (
-        f'<text x="{x}" y="{y}" fill="{fill}" font-family="'
-        f'-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" '
+        f'<text x="{x}" y="{y}" fill="{fill}" '
+        f'font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" '
         f'font-size="{size}px" font-weight="{weight}" text-anchor="{anchor}">'
         f'{esc(value)}</text>'
     )
 
 
-def generate_stats(data: dict[str, Any]) -> str:
-    width, height = WIDTH, HEIGHT
-    values = [
-        ("Contributions", data["contributions"], ACCENT),
-        ("Repositories", data["repositories"], GREEN),
-        ("Followers", data["followers"], PURPLE),
-        ("Stars", data["stars"], ORANGE),
-    ]
+def rounded_card(x: float, y: float, width: float, height: float) -> str:
+    return (
+        f'<rect x="{x}" y="{y}" width="{width}" height="{height}" '
+        f'rx="12" fill="{CARD}" stroke="{BORDER}"/>'
+    )
+
+
+def generate_activity_svg(
+    profile: dict[str, Any],
+    languages: Counter[str],
+) -> str:
+    current, longest = calculate_streak(profile["days"])
 
     parts = [
-        svg_open(width, height, "GitHub profile statistics"),
-        card_background(width, height),
-        text(24, 32, "GitHub Statistics", size=16, weight=600),
-        text(
-            width - 24,
-            32,
-            f"@{data['login']}",
+        f'<svg xmlns="http://www.w3.org/2000/svg" '
+        f'width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" '
+        f'role="img" aria-label="GitHub Activity for @{esc(profile["login"])}">',
+        f'<rect width="{WIDTH}" height="{HEIGHT}" rx="14" fill="{BG}" '
+        f'stroke="{BORDER}"/>',
+        svg_text(28, 38, "GitHub Activity", size=18, weight=600),
+        svg_text(
+            WIDTH - 28,
+            38,
+            f"@{profile['login']}",
             size=12,
             fill=MUTED,
             anchor="end",
         ),
     ]
 
-    positions = [(24, 65), (255, 65), (24, 125), (255, 125)]
+    # Top cards
+    card_y = 58
+    card_h = 170
+    gap = 18
+    card_w = (WIDTH - 56 - gap) / 2
+    left_x = 28
+    right_x = left_x + card_w + gap
 
-    for (label, value, accent), (x, y) in zip(values, positions):
-        parts.append(
-            f'<circle cx="{x + 5}" cy="{y - 5}" r="4" fill="{accent}"/>'
-        )
-        parts.append(text(x + 17, y, label, size=12, fill=MUTED))
-        parts.append(
-            text(x, y + 30, f"{value:,}", size=23, weight=700)
-        )
+    parts.extend([
+        rounded_card(left_x, card_y, card_w, card_h),
+        rounded_card(right_x, card_y, card_w, card_h),
+        svg_text(left_x + 22, card_y + 32, "GitHub Statistics", size=15, weight=600),
+        svg_text(right_x + 22, card_y + 32, "Top Languages", size=15, weight=600),
+    ])
 
-    parts.append("</svg>")
-    return "".join(parts)
+    stats = [
+        ("Contributions", profile["contributions"], BLUE),
+        ("Repositories", profile["repositories"], GREEN),
+        ("Followers", profile["followers"], PURPLE),
+        ("Stars", profile["stars"], ORANGE),
+    ]
 
+    positions = [
+        (left_x + 22, card_y + 70),
+        (left_x + 235, card_y + 70),
+        (left_x + 22, card_y + 135),
+        (left_x + 235, card_y + 135),
+    ]
 
-def generate_languages(languages: Counter[str]) -> str:
-    width, height = WIDTH, HEIGHT
+    for (label, value, accent), (x, y) in zip(stats, positions):
+        parts.append(f'<circle cx="{x + 4}" cy="{y - 5}" r="4" fill="{accent}"/>')
+        parts.append(svg_text(x + 16, y, label, size=11, fill=MUTED))
+        parts.append(svg_text(x, y + 29, f"{value:,}", size=22, weight=700))
+
+    # Language distribution, selected repositories only.
+    language_items = languages.most_common(5)
     total = sum(languages.values())
 
-    # Keep the card readable. Everything beyond the top five is grouped.
-    top = languages.most_common(5)
+    if total:
+        bar_x = right_x + 22
+        bar_y = card_y + 52
+        bar_w = card_w - 44
+        bar_h = 10
+        palette = [BLUE, PURPLE, GREEN, ORANGE, PINK]
+        cursor = bar_x
 
-    if total <= 0:
-        top = []
-    elif len(languages) > 5:
-        remaining = sum(value for _, value in languages.most_common()[5:])
-        top.append(("Other", remaining))
+        for index, (_, value) in enumerate(language_items):
+            segment = bar_w * value / total
+            parts.append(
+                f'<rect x="{cursor:.2f}" y="{bar_y}" '
+                f'width="{max(segment, 1):.2f}" height="{bar_h}" '
+                f'fill="{palette[index % len(palette)]}"/>'
+            )
+            cursor += segment
 
-    palette = [
-        "#58a6ff",
-        "#a371f7",
-        "#3fb950",
-        "#d29922",
-        "#f778ba",
-        "#8b949e",
-    ]
+        for index, (language, value) in enumerate(language_items):
+            x = right_x + 22 + (index % 2) * 205
+            y = card_y + 92 + (index // 2) * 32
+            percentage = value / total * 100
+            color = palette[index % len(palette)]
 
-    parts = [
-        svg_open(width, height, "Top programming languages"),
-        card_background(width, height),
-        text(24, 32, "Top Languages", size=16, weight=600),
-    ]
-
-    if not top:
-        parts.append(text(24, 75, "No language data available", fill=MUTED))
-        parts.append("</svg>")
-        return "".join(parts)
-
-    bar_x, bar_y = 24, 53
-    bar_width, bar_height = width - 48, 10
-    cursor = bar_x
-
-    for index, (_, value) in enumerate(top):
-        segment_width = bar_width * value / total
+            parts.append(f'<circle cx="{x + 4}" cy="{y - 4}" r="4" fill="{color}"/>')
+            parts.append(svg_text(x + 16, y, language, size=11))
+            parts.append(
+                svg_text(
+                    x + 190,
+                    y,
+                    f"{percentage:.1f}%",
+                    size=11,
+                    fill=MUTED,
+                    anchor="end",
+                )
+            )
+    else:
         parts.append(
-            f'<rect x="{cursor:.2f}" y="{bar_y}" '
-            f'width="{max(segment_width, 1):.2f}" height="{bar_height}" '
-            f'fill="{palette[index % len(palette)]}"/>'
-        )
-        cursor += segment_width
-
-    for index, (language, value) in enumerate(top):
-        x = 24 + (index % 2) * 230
-        y = 92 + (index // 2) * 30
-        percentage = value / total * 100
-        color = palette[index % len(palette)]
-
-        parts.append(
-            f'<circle cx="{x + 5}" cy="{y - 4}" r="4" fill="{color}"/>'
-        )
-        parts.append(text(x + 17, y, language, size=12))
-        parts.append(
-            text(
-                x + 200,
-                y,
-                f"{percentage:.1f}%",
+            svg_text(
+                right_x + 22,
+                card_y + 90,
+                "No language data available",
                 size=12,
                 fill=MUTED,
-                anchor="end",
+            )
+        )
+
+    # Streak card
+    streak_y = 246
+    streak_h = 150
+
+    parts.extend([
+        rounded_card(28, streak_y, WIDTH - 56, streak_h),
+        svg_text(50, streak_y + 32, "Contribution Streak", size=15, weight=600),
+        svg_text(
+            WIDTH - 50,
+            streak_y + 32,
+            "Based on the GitHub contribution calendar",
+            size=11,
+            fill=MUTED,
+            anchor="end",
+        ),
+        svg_text(50, streak_y + 74, "Current", size=11, fill=MUTED),
+        svg_text(50, streak_y + 108, f"{current} days", size=24, weight=700),
+        svg_text(500, streak_y + 74, "Longest", size=11, fill=MUTED),
+        svg_text(500, streak_y + 108, f"{longest} days", size=24, weight=700),
+    ])
+
+    if FEATURED_REPOSITORIES:
+        featured = ", ".join(FEATURED_REPOSITORIES)
+        parts.append(
+            svg_text(
+                50,
+                streak_y + 132,
+                f"Languages analyzed from: {featured}",
+                size=10,
+                fill=MUTED,
             )
         )
 
@@ -436,72 +426,43 @@ def generate_languages(languages: Counter[str]) -> str:
     return "".join(parts)
 
 
-def generate_streak(current: int, longest: int) -> str:
-    width, height = WIDTH, HEIGHT
-
-    parts = [
-        svg_open(width, height, "GitHub contribution streak"),
-        card_background(width, height),
-        text(24, 32, "Contribution Streak", size=16, weight=600),
-        text(width - 24, 32, "Self-hosted", size=12, fill=MUTED, anchor="end"),
-        text(24, 82, "Current", size=12, fill=MUTED),
-        text(24, 112, f"{current} days", size=24, weight=700),
-        text(255, 82, "Longest", size=12, fill=MUTED),
-        text(255, 112, f"{longest} days", size=24, weight=700),
-        text(
-            24,
-            150,
-            "Based on the GitHub contribution calendar",
-            size=11,
-            fill=MUTED,
-        ),
-        "</svg>",
-    ]
-
-    return "".join(parts)
-
-
-def write_outputs(data: dict[str, Any], languages: Counter[str]) -> None:
-    current, longest = calculate_streak(data["days"])
-
-    generated = {
-        OUTPUT_DIR / "stats.svg": generate_stats(data),
-        OUTPUT_DIR / "top-languages.svg": generate_languages(languages),
-        OUTPUT_DIR / "streak.svg": generate_streak(current, longest),
-    }
-
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    for path, content in generated.items():
-        path.write_text(content, encoding="utf-8")
-        print(f"Generated {path.relative_to(ROOT)}")
+def write_output(svg: str) -> None:
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text(svg, encoding="utf-8")
+    print(f"Generated {OUTPUT.relative_to(ROOT)}")
 
 
 def main() -> int:
-    token = os.environ.get("GITHUB_TOKEN")
-    username = os.environ.get("GITHUB_USERNAME", "009MHz")
+    token = os.getenv("GITHUB_TOKEN")
 
     if not token:
-        print("GITHUB_TOKEN is required.", file=sys.stderr)
+        print("ERROR: GITHUB_TOKEN is required.", file=sys.stderr)
         return 1
 
     try:
-        print(f"Fetching GitHub profile data for @{username}...")
-        profile = get_profile_data(username, token)
+        print(f"Fetching profile data for @{USERNAME}...")
+        profile = get_profile_data(USERNAME, token)
 
-        print("Fetching public repository list...")
-        repositories = get_public_repositories(username, token)
+        print(
+            "Analyzing languages from featured repositories: "
+            + ", ".join(FEATURED_REPOSITORIES)
+        )
+        languages = get_languages(
+            USERNAME,
+            FEATURED_REPOSITORIES,
+            token,
+        )
 
-        print(f"Aggregating languages from {len(repositories)} repositories...")
-        languages = get_languages(username, repositories, token)
+        svg = generate_activity_svg(profile, languages)
 
-        # Only write after every request has succeeded.
-        write_outputs(profile, languages)
+        if not svg.startswith("<svg ") or not svg.endswith("</svg>"):
+            raise RuntimeError("Generated SVG failed basic validation.")
 
-        print("Profile statistics generated successfully.")
+        write_output(svg)
+        print("Profile activity dashboard generated successfully.")
         return 0
 
-    except GitHubAPIError as exc:
+    except (GitHubAPIError, RuntimeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     except Exception as exc:
