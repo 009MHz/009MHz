@@ -5,8 +5,6 @@ The dashboard intentionally does not enumerate or analyze repository languages.
 It uses:
 - GitHub contribution calendar
 - Public repository count
-- Followers
-- Stars received by public, non-fork repositories
 - Manually curated technology focus
 
 Edit `TECHNOLOGY_FOCUS` in `scripts/generate_profile_stats.py` when the public
